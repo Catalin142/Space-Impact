@@ -17,7 +17,7 @@ public:
 	Application(const wchar_t* name, uint16 width, uint16 height);
 
 	virtual void onCreate() { }
-	virtual void onUpdate() { } 
+	virtual void onUpdate(float deltaTime) { } 
 
 	void Run();
 

@@ -14,6 +14,7 @@ public:
 	static void updateEntities(float deltaTime);
 
 	static void clearResources();
+	static void checkForDeadEntities();
 
 private:
 	static std::vector<Entity*> m_Entities;
@@ -22,5 +23,4 @@ private:
 	EntityManager() = default;
 	~EntityManager() = default;
 
-	static void checkForDeadEntities();
 };

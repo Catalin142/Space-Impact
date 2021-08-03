@@ -2,7 +2,8 @@
 
 #include <chrono>
 
-#include <iostream>
+#include "utils/Random.h"
+
 float Time::deltaTime = 0.0f;
 
 Application::Application(const wchar_t* name, uint16 width, uint16 height)
@@ -13,6 +14,7 @@ Application::Application(const wchar_t* name, uint16 width, uint16 height)
 
 void Application::Run()
 {
+	Random::Init();
 	onCreate();
 	std::chrono::steady_clock::time_point timeNow = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point oldTime = timeNow;
@@ -25,8 +27,10 @@ void Application::Run()
 		m_Context->beginDraw();
 		m_Context->clearScreen(R, G, B);
 
-		onUpdate();
 		EntityManager::updateEntities(Time::deltaTime);
+		onUpdate(Time::deltaTime);
+		EntityManager::checkForDeadEntities();
+
 		m_Context->endDraw();
 		
 		m_Window->pollEvents();

@@ -10,6 +10,7 @@ class Player : public Entity
 {
 public:
 	Player(const wchar_t* filepath, const vec2& pos = { 0, 0 }, const vec2& size = { 1, 1 });
+	~Player() = default;
 
 	virtual void onCreate() override;
 	virtual void onUpdate(float deltaTime) override;
@@ -23,8 +24,8 @@ private:
 	std::shared_ptr<Sprite> m_BulletSprite;
 	vec2 m_BulletSize = { 40.0f, 15.0f };
 
-	float m_GunCooldown = 0.05f;
-	float m_LastGun = 0.0f;
+	bool m_wasSpacePressed = false;
+	bool m_isSpacePressed = false;
 
 	vec2 m_GunPosition;
 

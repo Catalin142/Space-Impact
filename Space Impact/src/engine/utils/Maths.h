@@ -1,5 +1,4 @@
 #pragma once
-
 struct vec2
 {
 	float x = 0, y = 0;
@@ -23,3 +22,5 @@ struct vec4
 	vec4() = default;
 	vec4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) { }
 };
+
+vec2 moveTowards(const vec2& current, const vec2& target, float speed);
