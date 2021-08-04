@@ -1,5 +1,4 @@
 #include "Bullet.h"
-#include "../engine/entity/EntityManager.h"
 
 Bullet::Bullet(const std::shared_ptr<Sprite>& sprite, const vec2& pos, const vec2& size) : Entity(sprite, pos, size)
 {

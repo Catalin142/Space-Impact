@@ -2,6 +2,8 @@
 
 #include <chrono>
 
+#include "utils/SpriteManager.h"
+#include "entity/EntityManager.h"
 #include "utils/Random.h"
 
 float Time::deltaTime = 0.0f;

@@ -2,9 +2,6 @@
 #include <memory>
 #include "Win32Window.h"
 #include "GraphicsContext.h"
-#include "gfx/Sprite.h"
-#include "utils/SpriteManager.h"
-#include "entity/EntityManager.h"
 
 struct Time
 {

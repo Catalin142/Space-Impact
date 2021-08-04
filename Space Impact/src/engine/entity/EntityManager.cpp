@@ -31,7 +31,9 @@ void EntityManager::updateEntities(float deltaTime)
 			}
 
 			m_Entities[i]->onUpdate(deltaTime);
-			m_Entities[i]->onDraw();
+
+			if (m_Entities[i]->m_HasAnimation == false)
+				m_Entities[i]->onDraw();
 		}
 	}
 }

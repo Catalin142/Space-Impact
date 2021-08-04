@@ -1,5 +1,5 @@
 #pragma once
-#include "../engine/entity/Entity.h"
+#include "engine/entity/Entity.h"
 #include <vector>
 
 class GameManager

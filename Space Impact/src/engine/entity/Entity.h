@@ -25,6 +25,7 @@ public:
 	std::string& getTag() { return m_Tag; }
 
 	bool Initialized = false;
+	bool m_HasAnimation = false;
 
 protected:
 	std::shared_ptr<Sprite> m_Sprite;

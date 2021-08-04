@@ -1,7 +1,6 @@
 #pragma once
 #include "../engine/entity/Entity.h"
-#include "../engine/gfx/Sprite.h"
-#include "../engine/utils/Maths.h"
+#include "../engine/gfx/Animation.h"
 
 class BasicEnemy : public Entity
 {
@@ -13,10 +12,13 @@ public:
 	virtual void onUpdate(float deltaTime) override;
 
 	void takeDamage(int dmg) { m_Health -= dmg; }
+	bool isAlive() { return m_Health; }
 
 private:
-	float m_Speed = 300.0f;
+	float m_Speed = 275.0f;
 	vec2 m_TargetLocation = { 0.0f, 0.0f };
+
+	Animation m_Animation;
 
 	int m_Health = 2;
 };
