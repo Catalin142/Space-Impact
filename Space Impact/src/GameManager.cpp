@@ -39,6 +39,7 @@ void GameManager::onUpdate()
 				}
 
 			}
+
 		}
 	}
 
@@ -48,6 +49,15 @@ void GameManager::onUpdate()
 		{
 			static_cast<Player*>(m_Player)->takeDamage(1);
 			DestroyEntity(bullet);
+		}
+
+		for (auto& pBullet : m_PlayerBullets)
+		{
+			if (checkCollision(bullet, pBullet))
+			{
+				DestroyEntity(bullet);
+				DestroyEntity(pBullet);
+			}
 		}
 	}
 

@@ -15,6 +15,7 @@ public:
 
 	virtual void onCreate() { }
 	virtual void onUpdate(float deltaTime) { } 
+	virtual void onDestory() { }
 
 	void Run();
 

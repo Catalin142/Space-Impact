@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#include "../gfx/Animation.h"
+
 class EntityManager
 {
 public:

@@ -11,14 +11,17 @@ public:
 	virtual void onCreate() override;
 	virtual void onUpdate(float deltaTime) override;
 
+	void setDeathAnimation(Animation& anim);
+
 	void takeDamage(int dmg) { m_Health -= dmg; }
 	bool isAlive() { return m_Health; }
 
 private:
-	float m_Speed = 275.0f;
+	float m_Speed = 250.0f;
 	vec2 m_TargetLocation = { 0.0f, 0.0f };
 
 	Animation m_Animation;
+	Animation m_DeathAnimation;
 
 	int m_Health = 2;
 };

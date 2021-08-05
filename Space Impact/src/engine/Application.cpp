@@ -38,4 +38,5 @@ void Application::Run()
 		m_Window->pollEvents();
 		oldTime = timeNow;
 	}
+	onDestory();
 }

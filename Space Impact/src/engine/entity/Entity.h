@@ -26,6 +26,7 @@ public:
 
 	bool Initialized = false;
 	bool m_HasAnimation = false;
+	bool m_Explode = true;
 
 protected:
 	std::shared_ptr<Sprite> m_Sprite;

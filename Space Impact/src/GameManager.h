@@ -1,6 +1,10 @@
 #pragma once
 #include "engine/entity/Entity.h"
+#include "engine/utils/SpriteManager.h"
+#include "engine/gfx/Animation.h"
+
 #include <vector>
+#include <memory>
 
 class GameManager
 {

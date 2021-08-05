@@ -18,6 +18,8 @@ public:
 	void Draw(const D2D_RECT_F& src, const D2D_RECT_F& dest);
 	void Destroy();
 
+	vec2 getBitmapSize() const { return { m_Bitmap->GetSize().width, m_Bitmap->GetSize().height }; }
+
 private:
 	ID2D1Bitmap* m_Bitmap;
 	wchar_t* m_Filepath;

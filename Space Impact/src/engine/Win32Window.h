@@ -17,7 +17,7 @@ public:
 	void setWidth(uint16 width) { m_Width = width; }
 	void setHeight(uint16 height) { m_Height = height; }
 
-	bool isRunning() { return m_isRunning; }
+	bool& isRunning() { return m_isRunning; }
 
 	static Window* Get() { return m_Instance; }
 

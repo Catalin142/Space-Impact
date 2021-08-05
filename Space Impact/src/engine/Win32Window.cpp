@@ -7,6 +7,8 @@
 #include "GraphicsContext.h"
 #include "utils/SpriteManager.h"
 #include "entity/EntityManager.h"
+#include "gfx/TextRenderer.h"
+#include "utils/ColorFactory.h"
 
 Window* Window::m_Instance = nullptr;
 
@@ -26,13 +28,18 @@ static LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 
 	case WM_CLOSE:
 	{
+		EntityManager::clearResources();
+		SpriteManager::clearResources();
+		ColorFactory::clearResources();
+		TextFormatManager::clearResources();
+
+		Window::Get()->isRunning() = false;
+
 		DestroyWindow(hwnd);
 	} break;
 
 	case WM_DESTROY:
 	{
-		EntityManager::clearResources();
-		SpriteManager::clearResources();
 		PostQuitMessage(0);
 	} break;
 
