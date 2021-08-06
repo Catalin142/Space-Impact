@@ -83,15 +83,12 @@ public:
 					m_BossSpawned++;
 				}
 
-				if (m_Player != nullptr)
+				if (m_Player->getStatus() == true)
 				{
-					if (m_Player->getStatus() == true)
-					{
-						auto score = std::to_string(m_Player->getScore());
-						score.insert(0, 5 - score.size(), '0');
+					auto score = std::to_string(m_Player->getScore());
+					score.insert(0, 5 - score.size(), '0');
 
-						TextRenderer::RenderNumbersFromPNG(m_NumbersSheet, score, { 1000.0f, 10.0f }, { 50.0f, 50.0f });
-					}
+					TextRenderer::RenderNumbersFromPNG(m_NumbersSheet, score, { 1000.0f, 10.0f }, { 50.0f, 50.0f });
 				}
 
 				if (m_BossSpawned == 1)
