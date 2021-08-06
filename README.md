@@ -4,6 +4,8 @@ A copy of the Nokia 3310 game "Space Impact" made in C++ using tools provided by
   - DirectWrite for font rendering
   - Windows Multimedia API for sound
   
+This project contains only a level of the game.
+  
 # Build
 Run GenerateProject.bat
 
