@@ -31,5 +31,5 @@ protected:
 
 	vec2 m_GunPosition;
 
-	int m_Health = 3;
+	int m_Health = 8;
 };

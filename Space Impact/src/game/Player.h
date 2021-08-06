@@ -14,9 +14,11 @@ public:
 
 	void setDeathAnimation(Animation& anim);
 
-	void takeDamage(int dmg) { m_Health -= dmg; }
+	void takeDamage(int dmg) { if (m_LevelFinished == false) m_Health -= dmg; }
 	void addScore(int points) { m_Score += points; }
 	const int getScore() const { return m_Score; }
+
+	bool m_LevelFinished = false;
 
 private:
 	float m_Speed = 300.0f;
@@ -31,9 +33,6 @@ private:
 	std::shared_ptr<Sprite> m_BulletSprite;
 	vec2 m_BulletSize = { 45.0f, 20.0f };
 
-	bool m_wasSpacePressed = false;
-	bool m_isSpacePressed = false;
-
 	vec2 m_GunPosition;
 	float m_GunCooldown = 0.12f;
 	float m_GunLast = m_GunCooldown;
@@ -41,4 +40,5 @@ private:
 	int m_Health = 3;
 
 	int m_Score = 0;
+
 };

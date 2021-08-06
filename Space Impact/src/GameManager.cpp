@@ -15,8 +15,17 @@ void GameManager::onUpdate()
 	{
 		if (checkCollision(m_Player, enemy))
 		{
-			static_cast<Player*>(m_Player)->takeDamage(1);
-			DestroyEntity(enemy);
+			if (enemy->m_isCollidable == true)
+			{
+				static_cast<Player*>(m_Player)->takeDamage(1);
+				if (enemy->getTag() == "BasicEnemy")
+					static_cast<BasicEnemy*>(enemy)->takeDamage(100);
+
+				else if (enemy->getTag() == "ShootingEnemy")
+					static_cast<ShootingEnemy*>(enemy)->takeDamage(100);
+
+				enemy->m_isCollidable = false;
+			}
 		}
 
 		for (auto& bullet : m_PlayerBullets)

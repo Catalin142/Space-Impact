@@ -8,6 +8,12 @@ struct Time
 	static float deltaTime;
 };
 
+enum class ApplicationState : int
+{
+	PLAY,
+	PAUSE,
+};
+
 class Application
 {
 public:
@@ -24,6 +30,8 @@ public:
 protected:
 	std::shared_ptr<Window> m_Window;
 	std::shared_ptr<GraphicsContext> m_Context;
+
+	ApplicationState m_State = ApplicationState::PLAY;
 
 	float R = 0.0f, G = 0.0f, B = 0.0f;
 };

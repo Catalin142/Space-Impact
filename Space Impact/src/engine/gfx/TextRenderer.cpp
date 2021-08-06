@@ -4,9 +4,10 @@
 #include "../utils/Macros.h"
 
 #include <cassert>
+#include <algorithm>
+#include <iterator>
 
-IDWriteFactory* TextFormatManager::m_Factory = nullptr;
-IDWriteFontCollection* TextFormatManager::m_Collection = nullptr;
+IDWriteFactory5* TextFormatManager::m_Factory = nullptr;
 std::unordered_map<std::string, Font> TextFormatManager::m_TextFormats;
 
 void TextFormatManager::createFormat(const std::string& name, const wchar_t* font, float size)
@@ -35,7 +36,7 @@ void TextFormatManager::createFormat(const std::string& name, const wchar_t* fon
 			&format
 		);
 
-		format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+		format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 		format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
 		newFont.m_Format = format;
@@ -75,4 +76,84 @@ void TextRenderer::RenderString(const wchar_t* text, const vec2& position, Font 
 		pos,
 		brush
 	);
+}
+
+void TextRenderer::CenterString(const wchar_t* text, Font format, float offset, ID2D1SolidColorBrush* brush)
+{
+	DWRITE_TEXT_METRICS textMetrics;
+
+	UINT32 length = (UINT32)wcslen(text);
+
+	D2D1_RECT_F pos = D2D1::RectF(
+		0.0f, 0.0f,
+		Window::Get()->getWidth(), offset
+	);
+
+	GraphicsContext::Get()->getRenderTarget()->DrawText(
+		text,
+		length,
+		format.m_Format,
+		pos,
+		brush
+	);
+}
+
+void TextRenderer::RenderNumbersFromPNG(std::shared_ptr<Sprite>& atlas, const std::string& number, vec2 pos, vec2 size)
+{
+	auto it = number.begin();
+
+	for(int i = 0; i < number.size(); i++)
+	{
+		int digit = number[i] - '0';
+
+		D2D_RECT_F src = D2D1::RectF(
+			(float)((digit % 10) * (atlas->getBitmapSize().x / 10.0f)),
+			(float)((digit / 10) * atlas->getBitmapSize().y),
+			(float)((digit % 10) * (atlas->getBitmapSize().x / 10.0f)) + (atlas->getBitmapSize().x / 10.0f),
+			(float)((digit / 10) * atlas->getBitmapSize().y) + atlas->getBitmapSize().y
+		);
+
+		D2D_RECT_F dest = D2D1::RectF(
+			pos.x,
+			pos.y,
+			pos.x + size.x,
+			pos.y + size.y
+		);
+
+		pos.x += size.x;
+
+		atlas->Draw(src, dest);
+	}
+}
+
+#define MAX_LET 26
+
+void TextRenderer::RenderTextFromPNG(std::shared_ptr<Sprite>& atlas, const std::string& string, vec2 pos, vec2 size)
+{
+	std::string text;
+	std::transform(string.begin(), string.end(), std::back_inserter(text), ::toupper);
+	auto it = string.begin();
+
+	for (int i = 0; i < text.size(); i++)
+	{
+		int digit = text[i] - 'A';
+
+		D2D_RECT_F src = D2D1::RectF(
+			(float)((digit % MAX_LET) * (atlas->getBitmapSize().x / MAX_LET)),
+			(float)((digit / MAX_LET) * atlas->getBitmapSize().y),
+			(float)((digit % MAX_LET) * (atlas->getBitmapSize().x / MAX_LET)) + (atlas->getBitmapSize().x / MAX_LET),
+			(float)((digit / MAX_LET) * atlas->getBitmapSize().y) + atlas->getBitmapSize().y
+		);
+
+		D2D_RECT_F dest = D2D1::RectF(
+			pos.x,
+			pos.y,
+			pos.x + size.x,
+			pos.y + size.y
+		);
+
+		pos.x += size.x;
+
+		atlas->Draw(src, dest);
+	}
 }

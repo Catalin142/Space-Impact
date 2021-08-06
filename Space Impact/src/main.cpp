@@ -4,6 +4,7 @@
 #include "engine/utils/Random.h"
 #include "engine/gfx/TextRenderer.h"
 #include "engine/utils/ColorFactory.h"
+#include "engine/sound/SoundPlayer.h"
 
 #include "game/Player.h"
 #include "game/BasicEnemy.h"
@@ -16,7 +17,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-//int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 
 class SpaceImpact : public Application
 {
@@ -32,6 +32,9 @@ public:
 		m_EnemySprite = SpriteManager::loadSprite(L"res/Enemy.png");
 		m_ShootingEnemySprite = SpriteManager::loadSprite(L"res/ShootingEnemy.png");
 		m_BackgroundSprite = SpriteManager::loadSprite(L"res/Background.png");
+		m_NumbersSheet = SpriteManager::loadSprite(L"res/Numbers.png");
+		m_CharSheet = SpriteManager::loadSprite(L"res/Characters.png");
+
 		m_DeathAnimation = Animation(SpriteManager::loadSprite(L"res/Explosion.png"), 2, 200.0f, 90.0f);
 
 		m_Player->setDeathAnimation(m_DeathAnimation);
@@ -41,71 +44,95 @@ public:
 		size.y *= 1.3f;
 		m_Background[0] = CreateEntity<Background>(m_BackgroundSprite, { 0.0f, m_Window->getHeight() - size.y }, { size.x, size.y });
 		m_Background[1] = CreateEntity<Background>(m_BackgroundSprite, { size.x, m_Window->getHeight() - size.y }, { size.x, size.y });
-
-		ColorFactory::createColor("Negru", 0.0f, 0.0f, 0.0f);
-		TextFormatManager::createFormat("Font principal", L"ArcadeClassic", 100.0f);
 	}
 
 	virtual void onUpdate(float deltaTime) override
 	{
-		if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() < 300)
+		if (m_State == ApplicationState::PLAY)
 		{
-			auto enemy = CreateEntity<BasicEnemy>(m_EnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) }, 
-				{ 140, 90 });
-			enemy->setDeathAnimation(m_DeathAnimation);
-			m_EnemySpawnCooldown = 1.0f + Random::Float();
-			m_EnemyLastTime = 0.0f;
+			if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() < 300)
+			{
+				auto enemy = CreateEntity<BasicEnemy>(m_EnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+					{ 140, 90 });
+				enemy->setDeathAnimation(m_DeathAnimation);
+				m_EnemySpawnCooldown = 1.0f + Random::Float();
+				m_EnemyLastTime = 0.0f;
+			}
+
+			else if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() >= 300)
+			{
+				auto enemy = CreateEntity<ShootingEnemy>(m_ShootingEnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+					{ 125, 125 });
+				enemy->setDeathAnimation(m_DeathAnimation);
+				m_EnemySpawnCooldown = 1.5f + Random::Float();
+				m_EnemyLastTime = 0.0f;
+			}
+
+			if (m_Player->getScore() >= 900 && m_BossSpawned == false)
+			{
+				m_EnemyLastTime = 0.0f;
+				m_EnemySpawnCooldown = 4.0f;
+				m_Boss = CreateEntity<FirstBoss>(L"res/FirstBoss.png", { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+					{ 300.0f, 300.0f });
+				m_Boss->setDeathAnimation(m_DeathAnimation);
+
+				m_BossSpawned++;
+			}
+
+			if (m_Player->getStatus() == true)
+			{
+				auto score = std::to_string(m_Player->getScore());
+				score.insert(0, 5 - score.size(), '0');
+
+				TextRenderer::RenderNumbersFromPNG(m_NumbersSheet, score, { 1000.0f, 10.0f }, { 50.0f, 50.0f });
+			}
+
+			if (m_BossSpawned == 1)
+				if (m_Boss->isAlive() == false)
+				{
+					m_Player->m_LevelFinished = true;
+					m_BossSpawned++;
+				}
+
+			if (m_Player->m_LevelFinished == true)
+				TextRenderer::RenderTextFromPNG(m_CharSheet, "Level cleared", { m_Window->getWidth() / 2.0f - 6.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
+
+			GameManager::onUpdate();
+			m_EnemyLastTime += deltaTime;
 		}
-		
-		else if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() >= 300)
+
+		else if (m_State == ApplicationState::PAUSE)				
+			TextRenderer::RenderTextFromPNG(m_CharSheet, "Pause", { m_Window->getWidth() / 2.0f - 2.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
+
+
+		if (GetAsyncKeyState(VK_ESCAPE) & 0x0001)
 		{
-			auto enemy = CreateEntity<ShootingEnemy>(m_ShootingEnemySprite, {  (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
-				{ 125, 125 });
-			enemy->setDeathAnimation(m_DeathAnimation);
-			m_EnemySpawnCooldown = 1.5f + Random::Float();
-			m_EnemyLastTime = 0.0f;
+			if (m_State == ApplicationState::PAUSE)
+				m_State = ApplicationState::PLAY;
+			else m_State = ApplicationState::PAUSE;
 		}
-
-		if (m_Player->getScore() >= 200 && m_BossSpawned == false)
-		{
-			m_EnemyLastTime = 0.0f;
-			m_EnemySpawnCooldown = 4.0f;
-			CreateEntity<FirstBoss>(L"res/FirstBoss.png", {(float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f)}, {300.0f, 300.0f});
-
-			m_BossSpawned = true;
-		}
-
-		if (m_Player->getStatus() == true)
-		{
-			auto score = std::to_wstring(m_Player->getScore());
-			score.insert(0, 5 - score.size(), L'0');
-
-			TextRenderer::RenderString(score.c_str(), { 1100.0f, 10.0f }, TextFormatManager::getFormat("Font principal"),
-				ColorFactory::getColor("Negru")); \
-		}
-
-		GameManager::onUpdate();
-
-		m_EnemyLastTime += deltaTime;
 	}
 
 private:
 	Player* m_Player;
 	Background* m_Background[2];
+	FirstBoss* m_Boss = nullptr;
 
 	std::shared_ptr<Sprite> m_BackgroundSprite;
 	std::shared_ptr<Sprite> m_EnemySprite;
 	std::shared_ptr<Sprite> m_ShootingEnemySprite;
+	std::shared_ptr<Sprite> m_NumbersSheet;
+	std::shared_ptr<Sprite> m_CharSheet;
 
 	Animation m_DeathAnimation;
 
 	float m_EnemySpawnCooldown = 1.0f;
 	float m_EnemyLastTime;
 
-	bool m_BossSpawned = false;
+	int m_BossSpawned = 0;
 };
 
-int main()
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	Application* game = new SpaceImpact(L"Space Impact", 1600U, 900U);
 	game->Run();

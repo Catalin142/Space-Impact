@@ -29,9 +29,13 @@ void Application::Run()
 		m_Context->beginDraw();
 		m_Context->clearScreen(R, G, B);
 
-		EntityManager::updateEntities(Time::deltaTime);
+		if (m_State == ApplicationState::PLAY)
+		{
+			EntityManager::updateEntities(Time::deltaTime);
+			EntityManager::checkForDeadEntities();
+		}
+
 		onUpdate(Time::deltaTime);
-		EntityManager::checkForDeadEntities();
 
 		m_Context->endDraw();
 		

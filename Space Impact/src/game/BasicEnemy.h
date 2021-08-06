@@ -23,5 +23,5 @@ private:
 	Animation m_Animation;
 	Animation m_DeathAnimation;
 
-	int m_Health = 2;
+	int m_Health = 5;
 };
