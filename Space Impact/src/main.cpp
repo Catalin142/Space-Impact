@@ -127,7 +127,7 @@ private:
 	Animation m_DeathAnimation;
 
 	float m_EnemySpawnCooldown = 1.0f;
-	float m_EnemyLastTime;
+	float m_EnemyLastTime = m_EnemySpawnCooldown;
 
 	int m_BossSpawned = 0;
 };

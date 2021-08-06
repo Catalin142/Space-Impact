@@ -13,8 +13,18 @@ void Bullet::onUpdate(float deltaTime)
 {
 	m_Position.x += m_Speed * deltaTime;
 
-	if (m_Position.x > Window::Get()->getWidth())
+	if (m_Speed > 0)
 	{
-   		m_isAlive = false;
+		if (m_Position.x > Window::Get()->getWidth())
+		{
+			m_isAlive = false;
+		}
+	}
+	else
+	{
+		if (m_Position.x < 0)
+		{
+			m_isAlive = false;
+		}
 	}
 }
