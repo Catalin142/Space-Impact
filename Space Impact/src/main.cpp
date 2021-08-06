@@ -50,60 +50,67 @@ public:
 	{
 		if (m_State == ApplicationState::PLAY)
 		{
-			if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() < 300)
+			if (m_Player != nullptr)
 			{
-				auto enemy = CreateEntity<BasicEnemy>(m_EnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
-					{ 140, 90 });
-				enemy->setDeathAnimation(m_DeathAnimation);
-				m_EnemySpawnCooldown = 1.0f + Random::Float();
-				m_EnemyLastTime = 0.0f;
-			}
-
-			else if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() >= 300)
-			{
-				auto enemy = CreateEntity<ShootingEnemy>(m_ShootingEnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
-					{ 125, 125 });
-				enemy->setDeathAnimation(m_DeathAnimation);
-				m_EnemySpawnCooldown = 1.5f + Random::Float();
-				m_EnemyLastTime = 0.0f;
-			}
-
-			if (m_Player->getScore() >= 900 && m_BossSpawned == false)
-			{
-				m_EnemyLastTime = 0.0f;
-				m_EnemySpawnCooldown = 4.0f;
-				m_Boss = CreateEntity<FirstBoss>(L"res/FirstBoss.png", { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
-					{ 300.0f, 300.0f });
-				m_Boss->setDeathAnimation(m_DeathAnimation);
-
-				m_BossSpawned++;
-			}
-
-			if (m_Player->getStatus() == true)
-			{
-				auto score = std::to_string(m_Player->getScore());
-				score.insert(0, 5 - score.size(), '0');
-
-				TextRenderer::RenderNumbersFromPNG(m_NumbersSheet, score, { 1000.0f, 10.0f }, { 50.0f, 50.0f });
-			}
-
-			if (m_BossSpawned == 1)
-				if (m_Boss->isAlive() == false)
+				if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() < 300)
 				{
-					m_Player->m_LevelFinished = true;
+					//auto enemy = CreateEntity<BasicEnemy>(m_EnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+					//	{ 140, 90 });
+					auto enemy = CreateEntity<ShootingEnemy>(m_ShootingEnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+						{ 125, 125 });
+					enemy->setDeathAnimation(m_DeathAnimation);
+					m_EnemySpawnCooldown = 1.0f + Random::Float();
+					m_EnemyLastTime = 0.0f;
+				}
+
+				else if (m_EnemyLastTime > m_EnemySpawnCooldown && m_Player->getScore() >= 300)
+				{
+					auto enemy = CreateEntity<ShootingEnemy>(m_ShootingEnemySprite, { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+						{ 125, 125 });
+					enemy->setDeathAnimation(m_DeathAnimation);
+					m_EnemySpawnCooldown = 1.5f + Random::Float();
+					m_EnemyLastTime = 0.0f;
+				}
+
+				if (m_Player->getScore() >= 900 && m_BossSpawned == false)
+				{
+					m_EnemyLastTime = 0.0f;
+					m_EnemySpawnCooldown = 4.0f;
+					m_Boss = CreateEntity<FirstBoss>(L"res/FirstBoss.png", { (float)m_Window->getWidth(), 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f) },
+						{ 300.0f, 300.0f });
+					m_Boss->setDeathAnimation(m_DeathAnimation);
+
 					m_BossSpawned++;
 				}
 
-			if (m_Player->m_LevelFinished == true)
-				TextRenderer::RenderTextFromPNG(m_CharSheet, "Level cleared", { m_Window->getWidth() / 2.0f - 6.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
+				if (m_Player != nullptr)
+				{
+					if (m_Player->getStatus() == true)
+					{
+						auto score = std::to_string(m_Player->getScore());
+						score.insert(0, 5 - score.size(), '0');
 
-			GameManager::onUpdate();
-			m_EnemyLastTime += deltaTime;
+						TextRenderer::RenderNumbersFromPNG(m_NumbersSheet, score, { 1000.0f, 10.0f }, { 50.0f, 50.0f });
+					}
+				}
+
+				if (m_BossSpawned == 1)
+					if (m_Boss->isAlive() == false)
+					{
+						m_Player->m_LevelFinished = true;
+						m_BossSpawned++;
+					}
+
+				if (m_Player->m_LevelFinished == true)
+					TextRenderer::RenderTextFromPNG(m_CharSheet, "Level cleared", { m_Window->getWidth() / 2.0f - 6.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
+
+				GameManager::onUpdate();
+				m_EnemyLastTime += deltaTime;
+
+				if (m_Player->getStatus() == false)
+					m_Player = nullptr;
+			}
 		}
-
-		else if (m_State == ApplicationState::PAUSE)				
-			TextRenderer::RenderTextFromPNG(m_CharSheet, "Pause", { m_Window->getWidth() / 2.0f - 2.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
-
 
 		if (GetAsyncKeyState(VK_ESCAPE) & 0x0001)
 		{
@@ -111,6 +118,10 @@ public:
 				m_State = ApplicationState::PLAY;
 			else m_State = ApplicationState::PAUSE;
 		}
+
+		else if (m_State == ApplicationState::PAUSE)
+			TextRenderer::RenderTextFromPNG(m_CharSheet, "Pause", { m_Window->getWidth() / 2.0f - 2.5f * 75.0f, m_Window->getHeight() / 2.0f - 75.0f }, { 75.0f, 75.0f });
+		
 	}
 
 private:

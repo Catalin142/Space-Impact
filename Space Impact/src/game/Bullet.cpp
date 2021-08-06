@@ -17,14 +17,14 @@ void Bullet::onUpdate(float deltaTime)
 	{
 		if (m_Position.x > Window::Get()->getWidth())
 		{
-			m_isAlive = false;
+			DestroyEntity(this);
 		}
 	}
 	else
 	{
 		if (m_Position.x < 0)
 		{
-			m_isAlive = false;
+			DestroyEntity(this);
 		}
 	}
 }

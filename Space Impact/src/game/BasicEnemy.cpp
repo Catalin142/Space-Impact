@@ -30,6 +30,12 @@ void BasicEnemy::onUpdate(float deltaTime)
 			m_TargetLocation.y = 100.0f + Random::Float() * (Window::Get()->getHeight() - 200.0f);
 		}
 
+		if (m_Position.x < 500.0f)
+		{
+			m_TargetLocation.x = m_Position.x - 1000.0f;
+			m_TargetLocation.y = m_Position.y;
+		}
+
 		m_Animation.Play(m_Position, m_Size, 0.4f);
 
 		m_Position = moveTowards(m_Position, m_TargetLocation, deltaTime * m_Speed);

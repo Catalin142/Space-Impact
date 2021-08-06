@@ -29,8 +29,10 @@ void DestroyEntity(Entity* entity, float ts)
 
 bool checkCollision(const Entity* left, const Entity* right)
 {
-	if (left->m_Position.x + left->m_Size.x >= right->m_Position.x && left->m_Position.x <= right->m_Position.x + right->m_Size.x &&
-		left->m_Position.y + left->m_Size.y >= right->m_Position.y && left->m_Position.y <= right->m_Position.y + right->m_Size.y)
+	if (left->m_Position.x + left->m_Size.x >= right->m_Position.x && 
+		left->m_Position.x <= right->m_Position.x + right->m_Size.x &&
+		left->m_Position.y + left->m_Size.y >= right->m_Position.y && 
+		left->m_Position.y <= right->m_Position.y + right->m_Size.y)
 		return true;
 	return false;
 }

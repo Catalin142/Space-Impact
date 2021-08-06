@@ -52,6 +52,7 @@ void EntityManager::checkForDeadEntities()
 		if ((*p)->getStatus() == false)
 		{
 			delete* p;
+			*p = nullptr;
 			p = m_Entities.erase(p);
 		}
 		else p++;
