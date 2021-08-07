@@ -26,6 +26,9 @@ void ShootingEnemy::onUpdate(float deltaTime)
 		if (m_Position.x < 0 - m_Size.x)
 			DestroyEntity(this);
 
+		if (m_Position.x < 0)
+			m_Speed = 1000.0f;
+
 		if (m_TargetLocation.x == m_Position.x && m_TargetLocation.y == m_Position.y)
 		{
 			m_TargetLocation.x = Random::Float() * m_Position.x - 200.0f;

@@ -9,7 +9,9 @@
 class Entity
 {
 friend void DestroyEntity(Entity* entity, float ts); 
-friend bool checkCollision(const Entity* left, const Entity* right);
+friend bool checkCollision(Entity* left, Entity* right);
+
+friend class EntityManager;
 
 public:
 	Entity(const wchar_t* filepath, const vec2& pos = { 0, 0 }, const vec2& size = { 1, 1 });
@@ -37,6 +39,8 @@ protected:
 	bool m_isAlive = true;
 	std::string m_Tag = "Default";
 	
+	AABB m_CollisionBox;
+
 	float m_Timer = 0.0f;
 
 };
@@ -56,7 +60,7 @@ T* CreateEntity(const std::shared_ptr<Sprite>& spr, const vec2& pos = { 0, 0 }, 
 }
 
 void DestroyEntity(Entity* entity, float ts = 0.0f);
-bool checkCollision(const Entity* left, const Entity* right);
+bool checkCollision(Entity* left, Entity* right);
 
 /*
 // Exemplu:

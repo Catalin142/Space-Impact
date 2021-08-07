@@ -13,3 +13,13 @@ vec2 moveTowards(const vec2& current, const vec2& target, float speed)
 	vec2 sum = { current.x + tractDiv.x * speed, current.y + tractDiv.y * speed };
 	return (sum);
 }
+
+bool vec2::operator<(const vec2& right) const
+{
+	return (x < right.x && y < right.y);
+}
+
+bool vec2::operator>(const vec2& right) const
+{
+	return (x > right.x && y > right.y);
+}

@@ -15,7 +15,7 @@ void Bullet::onUpdate(float deltaTime)
 
 	if (m_Speed > 0)
 	{
-		if (m_Position.x > Window::Get()->getWidth())
+		if (m_Position.x > Window::Get()->getWidth() - m_Size.x)
 		{
 			DestroyEntity(this);
 		}

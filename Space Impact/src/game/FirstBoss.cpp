@@ -8,7 +8,7 @@
 
 FirstBoss::FirstBoss(const wchar_t* filepath, const vec2& pos, const vec2& size) : ShootingEnemy(SpriteManager::loadSprite(filepath), pos, size)
 { 
-	m_Health = 30;
+	m_Health = 50;
 	Animation anim(m_Sprite, 2, 200.5f, 91);
 	m_Animation = anim;
 	m_ShotCooldown = 1.0f;

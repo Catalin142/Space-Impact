@@ -32,11 +32,10 @@ void Application::Run()
 		if (m_State == ApplicationState::PLAY)
 		{
 			EntityManager::updateEntities(Time::deltaTime);
-			EntityManager::checkForDeadEntities();
 		}
 
 		onUpdate(Time::deltaTime);
-
+		EntityManager::checkForDeadEntities();
 		m_Context->endDraw();
 		
 		m_Window->pollEvents();

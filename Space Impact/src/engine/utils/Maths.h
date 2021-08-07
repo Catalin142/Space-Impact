@@ -5,6 +5,9 @@ struct vec2
 
 	vec2() = default;
 	vec2(float _x, float _y) : x(_x), y(_y) {}
+
+	bool operator< (const vec2& right) const;
+	bool operator> (const vec2& right) const;
 };
 
 struct vec3
@@ -21,6 +24,12 @@ struct vec4
 
 	vec4() = default;
 	vec4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) { }
+};
+
+struct AABB
+{
+	vec2 m_Min;
+	vec2 m_Max;
 };
 
 vec2 moveTowards(const vec2& current, const vec2& target, float speed);
