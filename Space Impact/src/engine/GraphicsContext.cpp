@@ -48,14 +48,14 @@ void GraphicsContext::onResize(uint16 width, uint16 height)
 
 void GraphicsContext::beginDraw()
 {
-	BeginPaint(m_Window->getHandle(), &m_PaintStruct);
+	//BeginPaint(m_Window->getHandle(), &m_PaintStruct);
 	m_RenderTarget->BeginDraw();
 }
 
 void GraphicsContext::endDraw()
 {
 	m_RenderTarget->EndDraw();
-	EndPaint(m_Window->getHandle(), &m_PaintStruct);
+	//EndPaint(m_Window->getHandle(), &m_PaintStruct);
 }
 
 void GraphicsContext::clearScreen(float r, float g, float b)

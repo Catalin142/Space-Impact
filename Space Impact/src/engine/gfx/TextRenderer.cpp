@@ -60,8 +60,6 @@ void TextFormatManager::clearResources()
 
 void TextRenderer::RenderString(const wchar_t* text, const vec2& position, Font format, ID2D1SolidColorBrush* brush)
 {
-	DWRITE_TEXT_METRICS textMetrics;
-
 	UINT32 length = (UINT32)wcslen(text);
 
 	D2D1_RECT_F pos = D2D1::RectF(
@@ -80,8 +78,6 @@ void TextRenderer::RenderString(const wchar_t* text, const vec2& position, Font 
 
 void TextRenderer::CenterString(const wchar_t* text, Font format, float offset, ID2D1SolidColorBrush* brush)
 {
-	DWRITE_TEXT_METRICS textMetrics;
-
 	UINT32 length = (UINT32)wcslen(text);
 
 	D2D1_RECT_F pos = D2D1::RectF(
